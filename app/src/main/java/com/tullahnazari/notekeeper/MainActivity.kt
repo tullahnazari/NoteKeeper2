@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 menuItem.isEnabled = false
 
             }
-        } 
+        }
 
         return super.onPrepareOptionsMenu(menu)
     }
