@@ -2,13 +2,13 @@ package com.tullahnazari.notekeeper
 
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.tullahnazari.notekeeper.Model.CourseInfo
+import com.tullahnazari.notekeeper.Model.NoteInfo
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -29,10 +29,22 @@ class MainActivity : AppCompatActivity() {
 
         spinnerCourses.adapter = adapterCourses
 
-        notePosition = intent.getIntExtra(EXTRA_NOTE_POSITION, POSITION_NOT_SET)
+        notePosition = savedInstanceState?.getInt(NOTE_POSITION, POSITION_NOT_SET) ?:
+            intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET)
 
         if (notePosition != POSITION_NOT_SET)
             displayNote()
+        else {
+            DataManager.notes.add(NoteInfo())
+            notePosition = DataManager.notes.lastIndex
+        }
+
+    }
+//saving the note you were on when phone is switched to landscape mode
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(NOTE_POSITION, notePosition)
+
 
     }
 
@@ -87,5 +99,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveNote()
+    }
+//save automagically
+    private fun saveNote() {
+        val note = DataManager.notes[notePosition]
+    note.title = textNoteTitle.text.toString()
+    note.text = textNoteText.text.toString()
+    note.course = spinnerCourses.selectedItem as CourseInfo
+
     }
 }
