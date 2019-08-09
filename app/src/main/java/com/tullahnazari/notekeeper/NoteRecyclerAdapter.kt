@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.tullahnazari.notekeeper.Model.NoteInfo
 import org.w3c.dom.Text
 
-class NoteRecyclerAdapter(private val context: Context) :
+class NoteRecyclerAdapter(private val context: Context, private val notes: List<NoteInfo>) :
     RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder>() {
 
     private val layoutInflater = LayoutInflater.from(context)
@@ -19,19 +20,21 @@ class NoteRecyclerAdapter(private val context: Context) :
 
     }
 
-    override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getItemCount() = notes.size
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val note = notes[position]
+        //text course element gets course title data
+        holder.textCourse?.text = note.course?.title
+        holder.textTitle?.text = note.title
+
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val textCourse = itemView.findViewById<TextView?>(R.id.textCourse)
         val textTitle = itemView.findViewById<TextView>(R.id.textTitle)
-        val imageView = itemView.findViewById<ImageView>(R.id.imageView)
 
 
     }

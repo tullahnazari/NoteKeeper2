@@ -27,6 +27,8 @@ class NoteListActivity : AppCompatActivity() {
         //associating layout manager with our recyclerview
         listItems.layoutManager = LinearLayoutManager(this)
 
+        listItems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
+
 
 
 
