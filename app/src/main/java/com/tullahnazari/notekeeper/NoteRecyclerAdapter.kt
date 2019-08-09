@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
@@ -30,6 +31,7 @@ class NoteRecyclerAdapter(private val context: Context) :
 
         val textCourse = itemView.findViewById<TextView?>(R.id.textCourse)
         val textTitle = itemView.findViewById<TextView>(R.id.textTitle)
+        val imageView = itemView.findViewById<ImageView>(R.id.imageView)
 
 
     }
