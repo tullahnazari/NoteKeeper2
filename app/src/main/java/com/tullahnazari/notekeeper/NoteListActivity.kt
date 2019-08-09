@@ -3,7 +3,9 @@ package com.tullahnazari.notekeeper
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tullahnazari.notekeeper.Model.NoteInfo
 
 import kotlinx.android.synthetic.main.activity_note_list.*
@@ -18,23 +20,21 @@ class NoteListActivity : AppCompatActivity() {
 
         //DIRECTING TO new page after clicking this button
         fab.setOnClickListener { view ->
-            val activityIntent = Intent(this, MainActivity::class.java)
+            val activityIntent = Intent(this, NoteActivity::class.java)
             startActivity(activityIntent)
         }
 
-        listNotes.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, DataManager.notes)
+        //associating layout manager with our recyclerview
+        listItems.layoutManager = LinearLayoutManager(this)
 
-        listNotes.setOnItemClickListener { parent, view, position, id ->
-            val activityIntent = Intent(this, MainActivity::class.java)
-            activityIntent.putExtra(NOTE_POSITION, position)
-            startActivity(activityIntent)
-        }
+
+
 
     }
 
     override fun onResume() {
         super.onResume()
-        (listNotes.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
+
     }
 
 }

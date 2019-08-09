@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".MainActivity"
+                android:name=".NoteActivity"
                 android:label="NoteKeeper"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
