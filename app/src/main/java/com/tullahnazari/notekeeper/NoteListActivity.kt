@@ -27,6 +27,8 @@ class NoteListActivity : AppCompatActivity() {
         //associating layout manager with our recyclerview
         listItems.layoutManager = LinearLayoutManager(this)
 
+        listItems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
+
 
 
 
@@ -34,6 +36,8 @@ class NoteListActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        //when you edit a note, the below line will make sure the note is updated when you are done editing
+        listItems.adapter?.notifyDataSetChanged()
 
     }
 
