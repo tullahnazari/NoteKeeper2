@@ -2,9 +2,7 @@ package com.tullahnazari.notekeeper
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import android.view.MenuItem
@@ -14,10 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_items.*
 import kotlinx.android.synthetic.main.content_items.*
 
 class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+
+    private val noteLayoutManager by lazy {LinearLayoutManager(this)}
+
+    private val noteRecyclerAdapter by lazy {NoteRecyclerAdapter(this, DataManager.notes)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +37,7 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        listItems.layoutManager = LinearLayoutManager(this)
-        listItems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
+        displayNotes()
 
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -43,6 +46,13 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+    }
+
+    private fun displayNotes() {
+        listItems.layoutManager = noteLayoutManager
+        listItems.adapter = noteRecyclerAdapter
+
+        nav_view.menu.findItem(R.id.nav_notes).isChecked = true
     }
 
     override fun onResume() {
@@ -78,27 +88,31 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_home -> {
-                // Handle the camera action
+            R.id.nav_notes -> {
+                // Handle the notes action
+                displayNotes()
             }
-            R.id.nav_gallery -> {
+            R.id.nav_courses -> {
 
-            }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_tools -> {
+                handleSelection("Courses")
 
             }
             R.id.nav_share -> {
+                handleSelection("Sharing now, i am a bot")
 
             }
             R.id.nav_send -> {
+
+                handleSelection("Send")
 
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun handleSelection(message: String) {
+        Snackbar.make(listItems, message, Snackbar.LENGTH_LONG).show()
     }
 }
