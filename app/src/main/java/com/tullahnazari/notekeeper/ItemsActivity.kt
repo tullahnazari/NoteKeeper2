@@ -11,10 +11,14 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.jwhh.notekeeper.CourseRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_items.*
 import kotlinx.android.synthetic.main.content_items.*
+import kotlinx.android.synthetic.main.content_items.listItems
+import kotlinx.android.synthetic.main.content_note_list.*
 
 class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -22,6 +26,14 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private val noteLayoutManager by lazy {LinearLayoutManager(this)}
 
     private val noteRecyclerAdapter by lazy {NoteRecyclerAdapter(this, DataManager.notes)}
+
+    private val courseLayoutManager by lazy {
+        GridLayoutManager(this, 2)
+    }
+
+    private val courseRecyclerAdapter by lazy {
+        CourseRecyclerAdapter(this, DataManager.courses.values.toList())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +66,18 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         nav_view.menu.findItem(R.id.nav_notes).isChecked = true
     }
+
+    private fun displayCourses() {
+
+        listItems.layoutManager = courseLayoutManager
+        listItems.adapter = courseRecyclerAdapter
+
+        nav_view.menu.findItem(R.id.nav_courses).isChecked = true
+    }
+
+
+
+
 
     override fun onResume() {
         super.onResume()
@@ -94,8 +118,7 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             R.id.nav_courses -> {
 
-                handleSelection("Courses")
-
+                displayCourses()
             }
             R.id.nav_share -> {
                 handleSelection("Sharing now, i am a bot")
