@@ -11,6 +11,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -23,9 +24,11 @@ import kotlinx.android.synthetic.main.content_note_list.*
 class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
-    private val noteLayoutManager by lazy {LinearLayoutManager(this)}
+    private val noteLayoutManager by lazy {
+        LinearLayoutManager(this)}
 
-    private val noteRecyclerAdapter by lazy {NoteRecyclerAdapter(this, DataManager.notes)}
+    private val noteRecyclerAdapter by lazy {
+        NoteRecyclerAdapter(this, DataManager.notes)}
 
     private val courseLayoutManager by lazy {
         GridLayoutManager(this, 2)
@@ -34,6 +37,9 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private val courseRecyclerAdapter by lazy {
         CourseRecyclerAdapter(this, DataManager.courses.values.toList())
     }
+
+    private val viewModel by lazy {
+        ViewModelProviders.of(this)[ItemsActivityViewModel::class.java]}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +55,7 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
 
-        displayNotes()
+        handleDisplaySelection(viewModel.navDrawerDisplaySelection)
 
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -112,13 +118,10 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_notes -> {
-                // Handle the notes action
-                displayNotes()
-            }
-            R.id.nav_courses -> {
-
-                displayCourses()
+            R.id.nav_notes,
+                R.id.nav_courses -> {
+                handleDisplaySelection(item.itemId)
+                viewModel.navDrawerDisplaySelection = item.itemId
             }
             R.id.nav_share -> {
                 handleSelection("Sharing now, i am a bot")
@@ -133,6 +136,21 @@ class ItemsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun handleDisplaySelection(itemId: Int) {
+
+        when(itemId) {
+            R.id.nav_notes -> {
+                displayNotes()
+            }
+            R.id.nav_courses -> {
+                displayCourses()
+            }
+
+        }
+
+
     }
 
     private fun handleSelection(message: String) {
